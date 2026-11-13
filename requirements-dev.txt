@@ -2,5 +2,5 @@
 pytest>=9.2.0
 pytest-django>=4.9
 ruff>=0.17.4
-bandit>=1.8
+bandit>=1.9.4
 pip-audit>=2.10.1
