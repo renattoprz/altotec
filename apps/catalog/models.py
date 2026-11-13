@@ -94,6 +94,7 @@ class ProductImage(models.Model):
     class Meta:
         ordering = ["order"]
         verbose_name = "imagen"
+        verbose_name_plural = "imágenes"
 
     def __str__(self):
         return self.alt or self.url

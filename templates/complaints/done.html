@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% block title %}{% if complaint.kind == "queja" %}Queja registrada{% else %}Reclamo registrado{% endif %} · AltoTec{% endblock %}
 {% block content %}
 <div class="container section"><div class="panel empty">
   {% include "includes/icon.html" with name="check" size=56 %}
-  <h1>{{ complaint }} registrada</h1>
+  <h1>{% if complaint.kind == "queja" %}Queja registrada{% else %}Reclamo registrado{% endif %}</h1>
+  <p><strong>{{ complaint }}</strong> del Libro de Reclamaciones.</p>
   <p>Fecha: {{ complaint.created_at|date:"d/m/Y H:i" }} · Responderemos a más tardar el {{ complaint.due_date|date:"d/m/Y" }}.</p>
-  <p class="muted">Te enviamos una copia a tu correo.</p>
+  <p class="muted">Te enviamos una copia a tu correo. Guarda el número de hoja para cualquier consulta.</p>
 </div></div>
 {% endblock %}

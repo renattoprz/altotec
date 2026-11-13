@@ -21,15 +21,42 @@ class PaymentError(Exception):
     pass
 
 
-def save_customer(data: dict, *, ip: str | None) -> Customer:
-    customer = Customer.objects.create(
-        doc_type=data["doc_type"],
-        doc_number=data["doc_number"],
-        full_name=data["full_name"],
-        email=data["email"],
-        phone=data["phone"],
-        marketing_consent=data.get("marketing_consent", False),
+def _find_or_create_customer(data: dict) -> Customer:
+    """Reutiliza al cliente si el documento Y el correo coinciden.
+
+    Privacidad: si alguien escribe el DNI de otra persona con un correo distinto,
+    se crea un registro aparte y nunca se sobrescriben los datos de contacto del
+    titular (evita que un tercero redirija avisos de pedidos ajenos). En una compra
+    repetida del mismo titular se actualizan nombre, teléfono y preferencia de
+    publicidad con lo último que indicó.
+    """
+    email = data["email"].strip()
+    customer = (
+        Customer.objects.filter(
+            doc_type=data["doc_type"],
+            doc_number=data["doc_number"],
+            email__iexact=email,
+        )
+        .order_by("pk")
+        .first()
     )
+    fields = {
+        "full_name": data["full_name"],
+        "phone": data["phone"],
+        "marketing_consent": data.get("marketing_consent", False),
+    }
+    if customer is None:
+        return Customer.objects.create(
+            doc_type=data["doc_type"], doc_number=data["doc_number"], email=email, **fields
+        )
+    for name, value in fields.items():
+        setattr(customer, name, value)
+    customer.save(update_fields=list(fields))
+    return customer
+
+
+def save_customer(data: dict, *, ip: str | None) -> Customer:
+    customer = _find_or_create_customer(data)
     version = settings.POLICY_VERSION
     Consent.objects.bulk_create(
         [

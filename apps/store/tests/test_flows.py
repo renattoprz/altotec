@@ -204,6 +204,9 @@ def test_complaint_book(client, demo):
     complaint = Complaint.objects.get()
     assert complaint.number == 1
     assert any("Libro de Reclamaciones" in m.subject for m in mail.outbox)
+    page = client.get(response.url).content.decode()
+    assert "<title>Reclamo registrado · AltoTec</title>" in page
+    assert "<h1>Reclamo registrado</h1>" in page
 
 
 def test_forms_reject_bots_without_debug(client, demo):
@@ -225,3 +228,19 @@ def _customer():
     return Customer.objects.create(
         doc_type="dni", doc_number="45678912", full_name="A", email="a@b.pe", phone="987654321"
     )
+
+
+def test_repeat_buyer_reuses_customer_but_not_with_other_email(client, demo):
+    from apps.customers.models import Customer
+
+    for _ in range(2):
+        add(client, "DEMO-TK80-USB")
+        client.post("/checkout/", CHECKOUT)
+    assert Customer.objects.filter(doc_number="45678912").count() == 1
+    assert Order.objects.filter(customer__doc_number="45678912").count() == 2
+
+    add(client, "DEMO-TK80-USB")
+    client.post("/checkout/", {**CHECKOUT, "email": "otra@example.com", "full_name": "X"})
+    original = Customer.objects.get(doc_number="45678912", email="ana@example.com")
+    assert original.full_name == "Ana Pérez"
+    assert Customer.objects.filter(doc_number="45678912").count() == 2
