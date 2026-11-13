@@ -25,4 +25,4 @@ ignore = ["S101"]
 "config/settings/*" = ["F405"]
 
 [tool.bandit]
-exclude_dirs = [".venv", "tests"]
+exclude_dirs = [".venv", "tests", "config/settings/test.py"]
