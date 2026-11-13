@@ -40,3 +40,12 @@ def test_unknown_shipping_destination_is_rejected():
     make_zone(departments=["15"])
     with pytest.raises(CartError):
         price_cart({product.pk: 1}, ubigeo="080101")
+
+
+@pytest.mark.django_db
+def test_province_zone_wins_over_department_zone():
+    product = make_product()
+    metro = make_zone(price="10.00", departments=["1501", "07"])
+    make_zone(price="20.00", departments=["15"])
+    assert price_cart({product.pk: 1}, ubigeo="150101").shipping_zone == metro
+    assert price_cart({product.pk: 1}, ubigeo="150501").shipping_pen == Decimal("20.00")

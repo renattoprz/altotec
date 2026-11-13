@@ -22,7 +22,7 @@ class ShippingZone(AuditedModel):
 
     name = models.CharField("zona", max_length=60, unique=True)
     departments = models.JSONField(
-        "códigos de departamento (ubigeo, 2 dígitos)", default=list, blank=True
+        "códigos ubigeo (2 dígitos departamento o 4 dígitos provincia)", default=list, blank=True
     )
     price_pen = models.DecimalField("tarifa (S/)", max_digits=8, decimal_places=2)
     lead_time_days = models.PositiveSmallIntegerField("plazo (días)")
