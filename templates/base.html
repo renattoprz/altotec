@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}AltoTec · Equipos POS para tu negocio{% endblock %}</title>
   <meta name="description" content="{% block description %}Ticketeras, monitores touch, All in One, lectores y kits POS con envío a todo el Perú. Paga seguro con Culqi.{% endblock %}">
-  <meta name="theme-color" content="#0b2447">
+  <meta name="theme-color" content="#04120e">
+  <link rel="preload" href="{% static 'fonts/inter-latin-var.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/manrope-latin-var.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
   <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
   {% block head %}{% endblock %}
@@ -20,7 +22,7 @@
   <header class="header">
     <div class="container">
       <a class="logo" href="{% url 'store:home' %}" aria-label="AltoTec, inicio">
-        <span class="logo-mark">{% include "includes/icon.html" with name="receipt" size=20 %}</span>
+        {% include "includes/logo_mark.html" with uid="h" %}
         <span>AltoTec<small>por CODALTO</small></span>
       </a>
       <form class="search" action="{% url 'store:catalog' %}" role="search">
@@ -47,7 +49,7 @@
   <footer class="footer">
     <div class="container">
       <div>
-        <a class="logo" href="{% url 'store:home' %}"><span class="logo-mark">{% include "includes/icon.html" with name="receipt" size=20 %}</span><span>AltoTec</span></a>
+        <a class="logo" href="{% url 'store:home' %}">{% include "includes/logo_mark.html" with uid="f" %}<span>AltoTec</span></a>
         <p class="small footer-about">Equipos para punto de venta para bodegas, restaurantes y tiendas de todo el Perú.</p>
         <a class="book-link" href="{% url 'complaints:form' %}">{% include "includes/icon.html" with name="book" size=22 %} Libro de Reclamaciones</a>
       </div>
