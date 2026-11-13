@@ -9,7 +9,7 @@ la tienda online" del proyecto CODALTO.
 ## Stack
 
 - Django 5.2 LTS (Python 3.13), plantillas del servidor
-- PostgreSQL (Supabase), Google Cloud Run (contenedor), Cloudflare (WAF, CDN, R2)
+- PostgreSQL 16, contenedor Docker en DigitalOcean, Cloudflare (WAF, CDN, TLS)
 - Pagos: Culqi Online · Comprobantes: AltoFact
 
 ## Estructura
@@ -28,15 +28,30 @@ la tienda online" del proyecto CODALTO.
 ```bash
 python3.13 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-export DJANGO_SECRET_KEY=solo-local
+cp .env.example .env              # y pon DJANGO_SECRET_KEY=cualquier-texto-local
 python manage.py migrate
+python manage.py load_demo_data   # catálogo y zonas de envío ficticios (DEMO)
 python manage.py createsuperuser
-python manage.py setup_mfa <usuario>   # el panel exige MFA
+python manage.py setup_mfa <usuario>   # el panel exige MFA: escanea el QR
 python manage.py runserver
 ```
 
-Panel en `http://localhost:8000/gestion-altotec/` (en producción la ruta la define
-`DJANGO_ADMIN_URL`).
+- Tienda: `http://localhost:8000/` · Panel: `http://localhost:8000/gestion-altotec/`
+  (en producción la ruta la define `DJANGO_ADMIN_URL`).
+- `manage.py` usa `config.settings.dev` y lee `.env` automáticamente.
+- Sin `DB_HOST` usa SQLite. Para usar PostgreSQL como en producción:
+  `docker compose up -d db` y en `.env`: `DB_HOST=localhost`,
+  `DB_PASSWORD=altotec_local`, `DB_SSLMODE=disable`.
+- Sin `CULQI_SECRET_KEY` el pago es **simulado** (botón "Pagar (simulado)").
+  Con llaves de prueba de Culqi (`pk_test_…`/`sk_test_…`) se usa el checkout real.
+- Los correos se imprimen en la consola.
+- Prueba de humo de la imagen de producción: `docker compose --profile app up --build`
+  y abrir `http://localhost:8080/`.
+
+## Despliegue
+
+Producción en DigitalOcean detrás de Cloudflare: ver
+[docs/deploy-digitalocean.md](docs/deploy-digitalocean.md).
 
 ## Calidad y seguridad
 
@@ -53,5 +68,5 @@ Los controles de seguridad y privacidad están en [docs/security](docs/security/
 ## Reglas del repositorio
 
 - `main` protegida: todo cambio entra por PR con CI en verde.
-- Nunca subir secretos: usar `.env` local (ver `.env.example`) y Secret Manager en producción.
+- Nunca subir secretos: usar `.env` local (ver `.env.example`) y variables cifradas de DigitalOcean en producción.
 - Reportar vulnerabilidades: ver [SECURITY.md](SECURITY.md).

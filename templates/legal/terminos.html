@@ -1,0 +1,18 @@
+{% extends "legal/_layout.html" %}
+{% block title %}Términos y condiciones · AltoTec{% endblock %}
+{% block legal %}
+<h1>Términos y condiciones</h1>
+<p>AltoTec es el nombre comercial de CODALTO (RUC 10704984885). Al comprar en tec.codaltoperu.com aceptas estas condiciones.</p>
+<h2>Precios y pagos</h2>
+<ul><li>Los precios están en soles e incluyen IGV.</li><li>Los pagos con tarjeta los procesa Culqi. AltoTec no almacena datos de tarjetas.</li><li>Un pedido se confirma cuando Culqi aprueba el pago.</li></ul>
+<h2>Productos bajo cotización</h2>
+<p>Los kits y equipos marcados "bajo cotización" se venden tras confirmar stock y precio. El enlace de pago es válido por 72 horas.</p>
+<h2>Entrega</h2>
+<p>Revisamos cada equipo antes de enviarlo. Los plazos dependen de la zona de envío y se cuentan desde la confirmación del pago.</p>
+<h2>Garantía</h2>
+<p>Cada producto indica sus meses de garantía. AltoTec responde ante el cliente y gestiona la garantía con el fabricante o proveedor.</p>
+<h2>Comprobantes</h2>
+<p>Emitimos boleta o factura electrónica según elijas al comprar.</p>
+<h2>Reclamos</h2>
+<p>Puedes registrar un reclamo o queja en nuestro <a href="{% url 'complaints:form' %}">Libro de Reclamaciones</a>.</p>
+{% endblock %}

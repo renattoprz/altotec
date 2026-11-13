@@ -1,0 +1,5 @@
+Respuesta a su {{ complaint.get_kind_display|lower }} - {{ complaint }}
+
+{{ complaint.response }}
+
+CODALTO (AltoTec) - RUC 10704984885

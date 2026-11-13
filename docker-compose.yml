@@ -1,0 +1,42 @@
+# Entorno local con PostgreSQL (igual que producción). Solo para desarrollo.
+#   docker compose up -d db          -> levanta PostgreSQL en localhost:5432
+#   (en .env: DB_HOST=localhost, DB_PASSWORD=altotec_local, DB_SSLMODE=disable)
+#   docker compose --profile app up  -> además corre la imagen de producción
+#                                        en http://localhost:8080 (prueba de humo)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: altotec
+      POSTGRES_USER: altotec_app
+      POSTGRES_PASSWORD: altotec_local  # solo local, nunca en producción
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U altotec_app -d altotec"]
+      interval: 5s
+      retries: 10
+
+  app:
+    profiles: ["app"]
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SECRET_KEY: solo-local-compose
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:8080
+      DB_HOST: db
+      DB_PASSWORD: altotec_local
+      DB_SSLMODE: disable
+      RUN_MIGRATIONS: "1"
+      # Solo en esta prueba local sin TLS; en producción siempre HTTPS.
+      DJANGO_INSECURE_LOCAL_HTTP: "1"
+    ports:
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  pgdata:

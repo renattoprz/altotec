@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container section"><div class="panel empty">
+  {% include "includes/icon.html" with name="check" size=56 %}
+  <h1>{{ complaint }} registrada</h1>
+  <p>Fecha: {{ complaint.created_at|date:"d/m/Y H:i" }} · Responderemos a más tardar el {{ complaint.due_date|date:"d/m/Y" }}.</p>
+  <p class="muted">Te enviamos una copia a tu correo.</p>
+</div></div>
+{% endblock %}

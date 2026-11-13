@@ -1,0 +1,22 @@
+{% load money %}
+<article class="card">
+  <a class="card-media" href="{% url 'store:product' product.slug %}" aria-label="{{ product.name }}">
+    {% with image=product.images.all|first %}{% if image %}<img src="{{ image.url }}" alt="{{ image.alt|default:product.name }}" loading="lazy" width="400" height="300">{% else %}{% include "includes/icon.html" with name=product.category.slug size=72 %}{% endif %}{% endwith %}
+    {% if product.sale_mode == "quote" %}<span class="tag tag-quote">Bajo cotización</span>{% else %}<span class="tag tag-online">Compra online</span>{% endif %}
+  </a>
+  <div class="card-body">
+    <span class="card-meta">{{ product.category.name }}{% if product.brand %} · {{ product.brand }}{% endif %}</span>
+    <h3><a href="{% url 'store:product' product.slug %}">{{ product.name }}</a></h3>
+    <div class="price">S/ {{ product.price_pen|soles }} <small>{% if product.sale_mode == "quote" %}desde · {% endif %}IGV incluido</small></div>
+    <div class="card-foot">
+      {% if product.can_buy_online %}
+      <form method="post" action="{% url 'store:cart_update' %}" class="btn-block">{% csrf_token %}
+        <input type="hidden" name="product" value="{{ product.pk }}"><input type="hidden" name="quantity" value="1"><input type="hidden" name="action" value="add">
+        <button class="btn btn-primary btn-block" type="submit">{% include "includes/icon.html" with name="cart" size=18 %} Agregar</button>
+      </form>
+      {% else %}
+      <a class="btn btn-ghost btn-block" href="{% url 'quotes:request' %}?producto={{ product.sku|urlencode }}">Cotizar</a>
+      {% endif %}
+    </div>
+  </div>
+</article>

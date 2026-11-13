@@ -1,0 +1,3 @@
+Nuevo {{ complaint.get_kind_display|lower }}: {{ complaint }}
+Fecha límite de respuesta: {{ complaint.due_date|date:"d/m/Y" }}
+Revísalo en el panel.

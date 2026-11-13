@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% load money %}
+{% block title %}Datos de compra · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <h1>Datos de compra</h1>
+  <div class="two-col">
+    <form method="post" class="panel stack" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+      <h2>1. Tus datos</h2>
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.doc_type %}
+        {% include "includes/field.html" with field=form.doc_number %}
+        {% include "includes/field.html" with field=form.full_name full=True %}
+        {% include "includes/field.html" with field=form.email %}
+        {% include "includes/field.html" with field=form.phone %}
+        {% include "includes/field.html" with field=form.receipt_type full=True %}
+      </div>
+      <h2>2. Entrega</h2>
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.delivery full=True %}
+        {% include "includes/field.html" with field=form.department %}
+        {% include "includes/field.html" with field=form.lima_province %}
+        {% include "includes/field.html" with field=form.district %}
+        {% include "includes/field.html" with field=form.reference %}
+        {% include "includes/field.html" with field=form.address full=True %}
+      </div>
+      <h2>3. Confirmación</h2>
+      {% include "includes/field.html" with field=form.accept_terms %}
+      {% include "includes/field.html" with field=form.marketing_consent %}
+      <p class="small muted">Lee los <a href="{% url 'store:terms' %}" target="_blank">términos</a> y la <a href="{% url 'store:privacy' %}" target="_blank">política de privacidad</a>. Usamos tus datos solo para tu pedido, comprobante y envío.</p>
+      <button class="btn btn-primary btn-block" type="submit">Continuar al pago</button>
+    </form>
+    <aside class="panel summary">
+      <h2>Tu pedido</h2>
+      {% for line in lines %}<div class="summary-row"><span>{{ line.quantity }} × {{ line.product.name }}</span><span>S/ {{ line.total|soles }}</span></div>{% endfor %}
+      <div class="summary-row summary-total"><span>Subtotal</span><span>S/ {{ subtotal|soles }}</span></div>
+      <p class="small muted">El envío se suma según tu zona:</p>
+      <table class="zones">{% for z in zones %}<tr><td>{{ z.name }}</td><td>S/ {{ z.price_pen|soles }}</td></tr>{% endfor %}</table>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/checkout.js' %}" defer></script>{% endblock %}

@@ -61,12 +61,17 @@ class Order(AuditedModel):
         max_length=64, unique=True, default=new_tracking_token, editable=False
     )
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="orders")
+    quote = models.OneToOneField(
+        "quotes.Quote", null=True, blank=True, on_delete=models.PROTECT, related_name="order"
+    )
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING_PAYMENT)
     receipt_type = models.CharField("comprobante", max_length=7, choices=Receipt.choices)
     receipt_number = models.CharField("número de comprobante", max_length=20, blank=True)
 
     delivery = models.CharField("modalidad", max_length=6, choices=Delivery.choices)
-    address = models.CharField("dirección", max_length=250)
+    address = models.CharField("dirección o agencia de destino", max_length=250)
+    district = models.CharField("distrito", max_length=80, blank=True)
+    reference = models.CharField("referencia", max_length=200, blank=True)
     ubigeo = models.CharField(
         max_length=6, validators=[RegexValidator(r"^\d{6}$", "Ubigeo inválido.")]
     )
@@ -77,6 +82,8 @@ class Order(AuditedModel):
     subtotal_pen = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0"))
     shipping_pen = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0"))
     total_pen = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0"))
+    paid_at = models.DateTimeField("pagado el", null=True, blank=True)
+    receipt_error = models.CharField("error al emitir comprobante", max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -85,6 +92,10 @@ class Order(AuditedModel):
 
     def __str__(self):
         return self.code
+
+    @property
+    def total_cents(self) -> int:
+        return int((self.total_pen * 100).to_integral_value())
 
 
 class OrderItem(models.Model):

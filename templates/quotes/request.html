@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Cotiza tu kit POS · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <div class="two-col">
+    <form method="post" class="panel stack" novalidate>{% csrf_token %}
+      <h1>Cotiza tu kit POS</h1>
+      <p class="muted">Cuéntanos tu negocio y te respondemos con precio, plazo y envío. Sin compromiso.</p>
+      {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.business_type %}
+        {% include "includes/field.html" with field=form.registers %}
+        {% include "includes/field.html" with field=form.detail full=True %}
+        {% include "includes/field.html" with field=form.delivery_note full=True %}
+        {% include "includes/field.html" with field=form.doc_type %}
+        {% include "includes/field.html" with field=form.doc_number %}
+        {% include "includes/field.html" with field=form.full_name full=True %}
+        {% include "includes/field.html" with field=form.email %}
+        {% include "includes/field.html" with field=form.phone %}
+      </div>
+      {% include "includes/field.html" with field=form.accept_terms %}
+      {% include "includes/turnstile.html" %}
+      <button class="btn btn-primary btn-block" type="submit">Enviar solicitud</button>
+    </form>
+    <aside class="panel summary stack">
+      <h2>¿Cómo funciona?</h2>
+      <ol class="how">
+        <li>Nos cuentas tu negocio.</li>
+        <li>Confirmamos stock y precio con el proveedor.</li>
+        <li>Te enviamos la cotización y un enlace de pago seguro (válido 72 horas).</li>
+        <li>Recibes tus equipos revisados en todo el Perú.</li>
+      </ol>
+      {% if product %}<div class="alert alert-info">Producto de interés: <strong>{{ product.name }}</strong></div>{% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}{% include "includes/turnstile_script.html" %}{% endblock %}

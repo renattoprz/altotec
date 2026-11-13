@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Derechos ARCO · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <form method="post" class="panel stack prose" novalidate>{% csrf_token %}
+    <h1>Ejerce tus derechos sobre tus datos</h1>
+    <p class="muted">Acceso, rectificación, cancelación u oposición (Ley N.° 29733). Te responderemos al correo indicado.</p>
+    {% if sent %}<div class="alert alert-success">Recibimos tu solicitud. Te responderemos dentro del plazo de ley.</div>{% endif %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+    {% include "includes/field.html" with field=form.email %}
+    {% include "includes/field.html" with field=form.kind %}
+    {% include "includes/field.html" with field=form.detail %}
+    {% include "includes/turnstile.html" %}
+    <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}{% include "includes/turnstile_script.html" %}{% endblock %}

@@ -1,0 +1,11 @@
+{% load money %}
+Hola {{ quote.customer.full_name }},
+
+Tu cotización #{{ quote.pk }} está lista.
+Total (incluye envío): S/ {{ quote.proposed_total_pen|soles }}
+
+Paga de forma segura aquí (válido hasta {{ quote.payment_link_expires_at|date:"d/m/Y H:i" }}):
+{{ pay_url }}
+
+Cualquier duda, responde este correo o escríbenos por WhatsApp.
+AltoTec

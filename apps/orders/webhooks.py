@@ -19,8 +19,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from . import culqi
-from .models import Order, Payment
+from . import culqi, services
+from .models import Payment
 
 log = logging.getLogger(__name__)
 
@@ -75,10 +75,7 @@ def culqi_webhook(request, token: str):
             payment.status = Payment.Status.SUCCEEDED
             payment.webhook_received_at = timezone.now()
             payment.save()
-            order = payment.order
-            if order.status == Order.Status.PENDING_PAYMENT:
-                order.status = Order.Status.PAID
-                order.save()
+            services.mark_paid(payment.order)
         else:
             payment.status = Payment.Status.FAILED
             payment.webhook_received_at = timezone.now()

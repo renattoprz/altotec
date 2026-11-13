@@ -1,0 +1,21 @@
+<aside class="filters">
+  <form method="get">
+    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+    <h3>Categorías</h3>
+    <ul>
+      <li><a href="{% url 'store:catalog' %}"{% if not category %} aria-current="page"{% endif %}>Todas</a></li>
+      {% for c in categories %}<li><a href="{% url 'store:category' c.slug %}"{% if category and category.pk == c.pk %} aria-current="page"{% endif %}>{{ c.name }}</a></li>{% endfor %}
+    </ul>
+    <h3>Forma de compra</h3>
+    <select name="modo" aria-label="Forma de compra">
+      <option value="">Todas</option>
+      <option value="online"{% if mode == "online" %} selected{% endif %}>Compra online</option>
+      <option value="quote"{% if mode == "quote" %} selected{% endif %}>Bajo cotización</option>
+    </select>
+    <h3>Precio máximo (S/)</h3>
+    <input type="number" name="max" min="0" step="50" value="{{ price_max }}" placeholder="Sin límite" aria-label="Precio máximo">
+    <h3>Ordenar por</h3>
+    <select name="orden" aria-label="Ordenar por">{% for value, label in sorts %}<option value="{{ value }}"{% if sort == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    <button class="btn btn-primary btn-block filters-apply" type="submit">Aplicar</button>
+  </form>
+</aside>

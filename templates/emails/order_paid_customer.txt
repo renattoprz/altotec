@@ -1,0 +1,17 @@
+{% load money %}
+Hola {{ order.customer.full_name }},
+
+Recibimos tu pago. Tu pedido {{ order.code }} está confirmado.
+
+{% for item in items %}- {{ item.quantity }} x {{ item.product.name }}: S/ {{ item.line_total|soles }}
+{% endfor %}{% if order.quote_id %}- Cotización #{{ order.quote_id }}: S/ {{ order.subtotal_pen|soles }}
+{% endif %}Envío: S/ {{ order.shipping_pen|soles }}
+Total pagado: S/ {{ order.total_pen|soles }}
+
+Entrega: {{ order.get_delivery_display }} - {{ order.address }}
+Comprobante: {{ order.get_receipt_type_display }}{% if order.receipt_number %} {{ order.receipt_number }}{% else %} (te lo enviaremos en breve){% endif %}
+
+Sigue tu pedido aquí: {{ tracking_url }}
+
+Gracias por comprar en AltoTec.
+CODALTO - RUC 10704984885
