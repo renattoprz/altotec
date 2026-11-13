@@ -1,0 +1,10 @@
+django>=5.2,<5.3
+psycopg[binary]>=3.2
+gunicorn>=23
+whitenoise>=6.8
+django-otp>=1.5
+qrcode>=8
+django-axes>=7
+django-csp>=4.0
+requests>=2.32
+argon2-cffi>=23
