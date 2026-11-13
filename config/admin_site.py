@@ -25,7 +25,9 @@ class AltoTecLoginForm(OTPAdminAuthenticationForm):
         ),
     )
 
-    otp_error_messages = {
+    # Mensajes de error visibles, no credenciales: bandit B105 se dispara solo
+    # porque las claves del diccionario contienen la palabra "token".
+    otp_error_messages = {  # nosec B105
         **OTPAdminAuthenticationForm.otp_error_messages,
         "token_required": "Ingresa el código de 6 dígitos de tu app autenticadora.",
         "invalid_token": "Código incorrecto o vencido. Inténtalo de nuevo.",
