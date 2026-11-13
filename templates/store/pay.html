@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load static %}
+{% load money %}
+{% block title %}Pagar pedido {{ order.code }} · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <h1>Pagar pedido {{ order.code }}</h1>
+  <div class="two-col">
+    <div class="panel stack">
+      <h2>Resumen</h2>
+      {% for item in items %}<div class="summary-row"><span>{{ item.quantity }} × {{ item.product.name }}</span><span>S/ {{ item.line_total|soles }}</span></div>{% endfor %}
+      {% if order.quote_id %}<div class="summary-row"><span>Cotización #{{ order.quote_id }} (incluye envío)</span><span>S/ {{ order.subtotal_pen|soles }}</span></div>{% endif %}
+      {% if not order.quote_id %}<div class="summary-row"><span>Envío · {{ order.shipping_zone.name }}</span><span>S/ {{ order.shipping_pen|soles }}</span></div>{% endif %}
+      <div class="summary-row summary-total"><span>Total</span><span>S/ {{ order.total_pen|soles }}</span></div>
+      <p class="muted small">{{ order.get_delivery_display }}: {{ order.address }}{% if order.district %}, {{ order.district }}{% endif %} · {{ place }}<br>Comprobante: {{ order.get_receipt_type_display }} a nombre de {{ order.customer.full_name }}</p>
+    </div>
+    <aside class="panel summary">
+      <h2>Pago con tarjeta</h2>
+      <div id="pay-error" class="alert alert-error" role="alert" hidden></div>
+      <div id="pay-config" data-charge-url="{% url 'store:charge' order.tracking_token %}" data-public-key="{{ culqi_public_key }}" data-amount="{{ order.total_cents }}" data-title="AltoTec · Pedido {{ order.code }}" data-email="{{ order.customer.email }}" data-fake="{% if fake_payments %}1{% endif %}"></div>
+      {% csrf_token %}
+      {% if fake_payments %}
+        <div class="alert alert-info">Modo demostración: no se cobra nada. Configura las llaves de prueba de Culqi para usar el formulario real.</div>
+        <button id="pay-btn" class="btn btn-accent btn-block" type="button">Simular pago aprobado</button>
+      {% else %}
+        <button id="pay-btn" class="btn btn-primary btn-block" type="button">{% include "includes/icon.html" with name="lock" size=18 %} Pagar S/ {{ order.total_pen|soles }}</button>
+      {% endif %}
+      <p class="secure-note">{% include "includes/icon.html" with name="shield" size=16 %} Tu tarjeta la procesa Culqi. AltoTec nunca ve ni guarda sus datos.</p>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}{% if not fake_payments %}<script src="https://checkout.culqi.com/js/v4"></script>{% endif %}<script src="{% static 'js/pay.js' %}" defer></script>{% endblock %}

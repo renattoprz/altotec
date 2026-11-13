@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Carrito · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <h1>Tu carrito</h1>
+  {% if lines %}
+  <div class="two-col">
+    <div class="panel">
+      {% for line in lines %}
+      <div class="line">
+        <div class="line-media">{% include "includes/icon.html" with name=line.product.category.slug size=36 %}</div>
+        <div>
+          <a href="{% url 'store:product' line.product.slug %}"><strong>{{ line.product.name }}</strong></a>
+          <div class="muted small">S/ {{ line.product.price_pen|soles }} c/u</div>
+          {% if not line.available %}<div class="error small">Sin stock confirmado: retíralo o pide cotización.</div>{% endif %}
+          <form method="post" action="{% url 'store:cart_update' %}">{% csrf_token %}
+            <input type="hidden" name="product" value="{{ line.product.pk }}">
+            <label class="sr-only" for="q{{ line.product.pk }}">Cantidad</label>
+            <input id="q{{ line.product.pk }}" type="number" name="quantity" value="{{ line.quantity }}" min="0" max="50">
+            <button class="btn btn-ghost" type="submit">Actualizar</button>
+          </form>
+          <form method="post" action="{% url 'store:cart_update' %}">{% csrf_token %}
+            <input type="hidden" name="product" value="{{ line.product.pk }}"><input type="hidden" name="quantity" value="0">
+            <button class="link-btn" type="submit">Quitar</button>
+          </form>
+        </div>
+        <strong>S/ {{ line.total|soles }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+    <aside class="panel summary">
+      <h2>Resumen</h2>
+      <div class="summary-row"><span>Subtotal</span><strong>S/ {{ subtotal|soles }}</strong></div>
+      <div class="summary-row muted"><span>Envío</span><span>Se calcula con tu dirección</span></div>
+      <a class="btn btn-primary btn-block" href="{% url 'store:checkout' %}">Continuar con la compra</a>
+      <h3 class="zones-title">Tarifas de envío</h3>
+      <table class="zones">{% for z in zones %}<tr><td>{{ z.name }} · {{ z.lead_time_days }} día{{ z.lead_time_days|pluralize }}</td><td>S/ {{ z.price_pen|soles }}</td></tr>{% endfor %}</table>
+      <p class="secure-note">{% include "includes/icon.html" with name="lock" size=16 %} Pago seguro con Culqi</p>
+    </aside>
+  </div>
+  {% else %}
+  <div class="panel empty">{% include "includes/icon.html" with name="cart" size=56 %}<h2>Tu carrito está vacío</h2><p class="muted">Explora nuestros equipos y agrega lo que necesitas.</p><a class="btn btn-primary" href="{% url 'store:catalog' %}">Ver productos</a></div>
+  {% endif %}
+</div>
+{% endblock %}

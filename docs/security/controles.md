@@ -13,7 +13,7 @@
 | 9 | Hash de contraseñas | Argon2 | CC6.1 | A.8.24 | — |
 | 10 | Auditoría inmutable | `apps/audit` (no se puede editar ni borrar; `test_audit.py`) | CC7.2 | A.8.15 | 6.13 |
 | 11 | Logs sin datos personales | `RedactPIIFilter` (`apps/audit/logging.py`) | C1.1 | A.8.15 | Minimización |
-| 12 | Secretos | Secret Manager; `.gitignore` de credenciales; gitleaks en CI | CC6.1 | A.5.17, A.8.4 | — |
+| 12 | Secretos | Variables cifradas de DigitalOcean; `.gitignore` de credenciales; gitleaks en CI | CC6.1 | A.5.17, A.8.4 | — |
 | 13 | Desarrollo seguro | Ruff (reglas S), Bandit, pip-audit, `check --deploy` en CI | CC8.1 | A.8.25, A.8.28 | — |
 | 14 | Gestión de cambios | Rama protegida, PR + CI obligatorios | CC8.1 | A.8.32 | — |
 | 15 | Contenedor sin root | `USER 10001` en `Dockerfile` | CC6.8 | A.8.2 | — |

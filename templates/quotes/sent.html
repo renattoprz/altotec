@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Cotización enviada · AltoTec{% endblock %}
+{% block content %}
+<div class="container section"><div class="panel empty">
+  {% include "includes/icon.html" with name="check" size=56 %}
+  <h1>Recibimos tu solicitud #{{ quote.pk }}</h1>
+  <p class="muted">Te escribiremos a {{ quote.customer.email }} con tu cotización. Si quieres avanzar más rápido, escríbenos por WhatsApp.</p>
+  <a class="btn btn-whatsapp" href="{{ whatsapp_url }}" target="_blank" rel="noopener">{% include "includes/icon.html" with name="chat" size=20 %} Continuar por WhatsApp</a>
+</div></div>
+{% endblock %}

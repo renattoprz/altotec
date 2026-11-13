@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="eyebrow">Para bodegas, restaurantes y tiendas</span>
+      <h1>Cobra más rápido con <span class="hl">equipos POS</span> listos para usar</h1>
+      <p>Ticketeras, monitores touch, All in One, lectores y kits completos para bodegas, restaurantes y tiendas. Compra online con pago seguro o pide una cotización a tu medida.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{% url 'store:catalog' %}">Ver productos</a>
+        <a class="btn btn-light" href="{% url 'quotes:request' %}">Cotizar mi kit</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="tile">{% include "includes/icon.html" with name="ticketeras" size=56 %}</div>
+      <div class="tile">{% include "includes/icon.html" with name="monitores-touch" size=56 %}</div>
+      <div class="tile">{% include "includes/icon.html" with name="all-in-one-pos" size=56 %}</div>
+      <div class="tile">{% include "includes/icon.html" with name="lectores-de-codigo-de-barras" size=56 %}</div>
+      <div class="tile">{% include "includes/icon.html" with name="gavetas-de-dinero" size=56 %}</div>
+      <div class="tile">{% include "includes/icon.html" with name="kits-pos" size=56 %}</div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="perks">
+    <div class="perk">{% include "includes/icon.html" with name="truck" size=28 %}<div><strong>Envíos a todo el Perú</strong><span>Domicilio o recojo en agencia</span></div></div>
+    <div class="perk">{% include "includes/icon.html" with name="shield" size=28 %}<div><strong>Pago seguro</strong><span>Con Culqi; no guardamos tu tarjeta</span></div></div>
+    <div class="perk">{% include "includes/icon.html" with name="receipt" size=28 %}<div><strong>Boleta o factura</strong><span>Electrónica, al instante</span></div></div>
+    <div class="perk">{% include "includes/icon.html" with name="check" size=28 %}<div><strong>Equipos revisados</strong><span>Probamos cada equipo antes de enviarlo</span></div></div>
+  </div>
+</div>
+
+<section class="section"><div class="container">
+  <div class="section-head"><div><h2>Compra por categoría</h2><p>Encuentra el equipo exacto para tu caja.</p></div></div>
+  <div class="cat-grid">
+    {% for c in categories %}<a class="cat-card" href="{% url 'store:category' c.slug %}"><span class="icon">{% include "includes/icon.html" with name=c.slug size=30 %}</span>{{ c.name }}</a>{% endfor %}
+  </div>
+</div></section>
+
+{% if featured %}<section class="section"><div class="container">
+  <div class="section-head"><div><h2>Listos para comprar</h2><p>Stock confirmado y despacho inmediato.</p></div><a href="{% url 'store:catalog' %}?modo=online">Ver todos</a></div>
+  <div class="grid">{% for product in featured %}{% include "includes/product_card.html" %}{% endfor %}</div>
+</div></section>{% endif %}
+
+{% if kits %}<section class="section"><div class="container">
+  <div class="section-head"><div><h2>Kits POS por tipo de negocio</h2><p>Te armamos el kit según tu rubro y número de cajas.</p></div></div>
+  <div class="grid">{% for product in kits %}{% include "includes/product_card.html" %}{% endfor %}</div>
+</div></section>{% endif %}
+
+<section class="section"><div class="container">
+  <div class="cta">
+    <div><h2>¿No sabes qué equipos necesitas?</h2><p>Cuéntanos tu negocio y te enviamos una cotización con el kit ideal, instalación y envío incluidos.</p></div>
+    <a class="btn btn-light" href="{% url 'quotes:request' %}">Pedir cotización gratis</a>
+  </div>
+</div></section>
+{% endblock %}

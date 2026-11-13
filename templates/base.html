@@ -1,0 +1,80 @@
+{% load static %}<!doctype html>
+<html lang="es-PE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AltoTec · Equipos POS para tu negocio{% endblock %}</title>
+  <meta name="description" content="{% block description %}Ticketeras, monitores touch, All in One, lectores y kits POS con envío a todo el Perú. Paga seguro con Culqi.{% endblock %}">
+  <meta name="theme-color" content="#04120e">
+  <link rel="preload" href="{% static 'fonts/inter-latin-var.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/manrope-latin-var.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  {% if demo_mode %}<div class="demo-bar">Entorno de desarrollo: productos, precios y pagos son de DEMOSTRACIÓN.</div>{% endif %}
+  <div class="topbar"><div class="container">
+    <span>Envíos a todo el Perú · Garantía en todos los equipos</span>
+    <span class="hide-sm"><a href="{% url 'quotes:request' %}">Cotiza tu kit</a> · <a href="{% url 'store:shipping' %}">Envíos</a></span>
+  </div></div>
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="{% url 'store:home' %}" aria-label="AltoTec, inicio">
+        {% include "includes/logo_mark.html" with uid="h" %}
+        <span>AltoTec<small>por CODALTO</small></span>
+      </a>
+      <form class="search" action="{% url 'store:catalog' %}" role="search">
+        <label class="sr-only" for="q">Buscar productos</label>
+        <input id="q" type="search" name="q" placeholder="Busca ticketeras, monitores, kits..." value="{{ query|default:'' }}" maxlength="80">
+        <button type="submit" aria-label="Buscar">{% include "includes/icon.html" with name="search" size=20 %}</button>
+      </form>
+      <div class="header-actions">
+        <a class="icon-btn" href="{% url 'quotes:request' %}">{% include "includes/icon.html" with name="chat" size=20 %}<span class="label">Cotizar</span></a>
+        <a class="icon-btn" href="{% url 'store:cart' %}" aria-label="Carrito, {{ cart_count }} productos">{% include "includes/icon.html" with name="cart" size=22 %}<span class="label">Carrito</span><span class="badge-count">{{ cart_count }}</span></a>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Categorías"><div class="container"><ul>
+      <li><a href="{% url 'store:catalog' %}">Todos</a></li>
+      {% for c in nav_categories %}<li><a href="{% url 'store:category' c.slug %}"{% if category and category.pk == c.pk %} aria-current="page"{% endif %}>{{ c.name }}</a></li>{% endfor %}
+    </ul></div></nav>
+  </header>
+
+  <main id="contenido">
+    {% if messages %}<div class="container">{% for m in messages %}<div class="alert {% if m.tags == 'error' %}alert-error{% else %}alert-success{% endif %}" role="status">{{ m }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div>
+        <a class="logo" href="{% url 'store:home' %}">{% include "includes/logo_mark.html" with uid="f" %}<span>AltoTec</span></a>
+        <p class="small footer-about">Equipos para punto de venta para bodegas, restaurantes y tiendas de todo el Perú.</p>
+        <a class="book-link" href="{% url 'complaints:form' %}">{% include "includes/icon.html" with name="book" size=22 %} Libro de Reclamaciones</a>
+      </div>
+      <div><h4>Comprar</h4><ul>
+        <li><a href="{% url 'store:catalog' %}">Todos los productos</a></li>
+        <li><a href="{% url 'quotes:request' %}">Cotizar un kit</a></li>
+        <li><a href="{% url 'store:cart' %}">Mi carrito</a></li>
+      </ul></div>
+      <div><h4>Ayuda</h4><ul>
+        <li><a href="{% url 'store:shipping' %}">Envíos</a></li>
+        <li><a href="{% url 'store:returns' %}">Cambios y devoluciones</a></li>
+        {% if store_whatsapp %}<li><a href="https://wa.me/{{ store_whatsapp }}" rel="noopener" target="_blank">WhatsApp</a></li>{% endif %}
+      </ul></div>
+      <div><h4>Legal</h4><ul>
+        <li><a href="{% url 'store:terms' %}">Términos y condiciones</a></li>
+        <li><a href="{% url 'store:privacy' %}">Política de privacidad</a></li>
+        <li><a href="{% url 'arco' %}">Derechos ARCO</a></li>
+      </ul></div>
+    </div>
+    <div class="container legal">© {% now "Y" %} CODALTO · RUC 10704984885 · Pagos procesados de forma segura por Culqi. No almacenamos datos de tarjetas.</div>
+  </footer>
+  {% if store_whatsapp %}<a class="wa-float" href="https://wa.me/{{ store_whatsapp }}" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">{% include "includes/icon.html" with name="chat" size=28 %}</a>{% endif %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -20,3 +20,9 @@ STORAGES = {
 CULQI_SECRET_KEY = "sk_test_dummy"
 CULQI_WEBHOOK_TOKEN = "test-webhook-token"
 TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"
+
+EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+STORE_ADMIN_EMAILS = ["admin@test.pe"]
+STORE_WHATSAPP = "51999999999"
+SITE_URL = "http://testserver"

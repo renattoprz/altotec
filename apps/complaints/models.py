@@ -29,6 +29,11 @@ class Complaint(AuditedModel):
     number = models.PositiveIntegerField("correlativo", unique=True, editable=False)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="complaints")
     kind = models.CharField("tipo", max_length=7, choices=Kind.choices)
+    consumer_address = models.CharField("domicilio del consumidor", max_length=250, default="")
+    guardian_name = models.CharField(
+        "padre, madre o apoderado (si es menor de edad)", max_length=200, blank=True
+    )
+    order_code = models.CharField("código de pedido", max_length=12, blank=True)
     product_or_service = models.CharField("bien o servicio", max_length=200)
     amount_pen = models.DecimalField(
         "monto reclamado (S/)", max_digits=12, decimal_places=2, null=True, blank=True

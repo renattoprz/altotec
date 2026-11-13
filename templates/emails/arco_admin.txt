@@ -1,0 +1,2 @@
+Nueva solicitud ARCO ({{ arco.get_kind_display }}) de {{ arco.email }}:
+{{ arco.detail }}

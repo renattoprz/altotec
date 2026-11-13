@@ -1,7 +1,7 @@
 """Configuración base de AltoTec.
 
 Toda configuración sensible se lee de variables de entorno (en producción las
-inyecta Google Secret Manager). Nunca se guardan secretos en el repositorio.
+inyecta DigitalOcean como variables cifradas). Nunca se guardan secretos en el repositorio.
 Ver docs/security/ para el mapeo de controles a SOC 2 / ISO 27001 / ISO 27701.
 """
 
@@ -46,12 +46,14 @@ INSTALLED_APPS = [
     "axes",
     "csp",
     # Dominio
+    "apps.core",
     "apps.audit",
     "apps.catalog",
     "apps.customers",
     "apps.orders",
     "apps.quotes",
     "apps.complaints",
+    "apps.store",
 ]
 
 MIDDLEWARE = [
@@ -83,6 +85,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.core.context_processors.store",
             ],
         },
     },
@@ -177,6 +180,10 @@ USE_TZ = True
 # --- Archivos estáticos -----------------------------------------------------
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+# Archivos servidos en la raíz del sitio (favicon.ico, apple-touch-icon, manifiesto).
+WHITENOISE_ROOT = BASE_DIR / "static" / "root"
+WHITENOISE_MIMETYPES = {".webmanifest": "application/manifest+json"}
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
@@ -222,3 +229,31 @@ LOGGING = {
 }
 
 ADMIN_URL = env("DJANGO_ADMIN_URL", "gestion-altotec/")
+
+# --- Caché (límite de solicitudes). En producción: tabla en PostgreSQL,
+# compartida entre todos los procesos (python manage.py createcachetable).
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "django_cache",
+    }
+}
+
+# --- Correo -----------------------------------------------------------------
+EMAIL_BACKEND = env("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = int(env("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "AltoTec <ventas@codaltoperu.com>")
+
+# --- Tienda -----------------------------------------------------------------
+SITE_URL = env("SITE_URL", "https://tec.codaltoperu.com")
+STORE_ADMIN_EMAILS = env_list("STORE_ADMIN_EMAILS")
+STORE_WHATSAPP = env("STORE_WHATSAPP")  # solo dígitos, con código de país: 51999999999
+POLICY_VERSION = "2026-11-v1"
+QUOTE_PAYMENT_LINK_HOURS = 72
+# Pago simulado (sin Culqi) solo para desarrollo local; nunca en producción.
+FAKE_PAYMENTS = False

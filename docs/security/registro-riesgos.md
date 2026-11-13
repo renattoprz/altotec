@@ -6,7 +6,7 @@ Escala 1–5. Riesgo = probabilidad × impacto. Revisión semestral.
 | --- | --- | --- | --- | --- | --- | --- |
 | R1 | Proveedor no entrega tras el cobro (responsabilidad ante Indecopi) | 3 | 4 | 12 | Venta online solo con stock confirmado en 48 h; acuerdo escrito con proveedores; reembolso rápido | Titular |
 | R2 | Robo de credenciales del panel | 2 | 5 | 10 | MFA, bloqueo, gestor de contraseñas | Titular |
-| R3 | Filtración de llaves de Culqi | 2 | 5 | 10 | Secret Manager, gitleaks, rotación ante sospecha | Titular |
+| R3 | Filtración de llaves de Culqi | 2 | 5 | 10 | Variables cifradas en DigitalOcean, gitleaks, rotación ante sospecha | Titular |
 | R4 | Fraude con tarjetas robadas | 3 | 3 | 9 | Antifraude de Culqi, revisión manual de pedidos de alto monto | Titular |
 | R5 | Pérdida de base de datos | 1 | 5 | 5 | Respaldo diario externo + prueba mensual | Titular |
 | R6 | Dependencia vulnerable | 3 | 3 | 9 | Dependabot + pip-audit en CI | Titular |

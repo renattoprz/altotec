@@ -39,10 +39,15 @@ class PricedCart:
 
 
 def zone_for_ubigeo(ubigeo: str) -> ShippingZone:
-    department = ubigeo[:2]
-    for zone in ShippingZone.objects.filter(active=True):
-        if department in zone.departments:
-            return zone
+    """Busca primero por provincia (4 dígitos) y luego por departamento (2 dígitos).
+
+    Así "Lima Metropolitana" (1501) gana sobre "Resto de Lima" (15).
+    """
+    zones = list(ShippingZone.objects.filter(active=True))
+    for prefix in (ubigeo[:4], ubigeo[:2]):
+        for zone in zones:
+            if prefix in zone.departments:
+                return zone
     raise CartError("No hacemos envíos a esa ubicación todavía.")
 
 

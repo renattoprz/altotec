@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.name }}{% elif query %}Resultados para “{{ query }}”{% else %}Todos los productos{% endif %} · AltoTec{% endblock %}
+{% block content %}
+<div class="container">
+  <nav class="breadcrumbs" aria-label="Ruta"><a href="{% url 'store:home' %}">Inicio</a> / {% if category %}{{ category.name }}{% else %}Productos{% endif %}</nav>
+  <h1>{% if category %}{{ category.name }}{% elif query %}Resultados para “{{ query }}”{% else %}Todos los productos{% endif %}</h1>
+  <details class="filters-mobile"><summary>Filtrar y ordenar</summary>{% include "store/_filters.html" %}</details>
+  <div class="catalog">
+    {% include "store/_filters.html" %}
+    <div>
+      <div class="toolbar"><span class="muted">{{ page.paginator.count }} producto{{ page.paginator.count|pluralize }}</span></div>
+      {% if page.object_list %}
+        <div class="grid">{% for product in page.object_list %}{% include "includes/product_card.html" %}{% endfor %}</div>
+        {% if page.paginator.num_pages > 1 %}<nav class="pagination" aria-label="Páginas">
+          {% if page.has_previous %}<a href="?{{ querystring }}&pagina={{ page.previous_page_number }}">Anterior</a>{% endif %}
+          <span>Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
+          {% if page.has_next %}<a href="?{{ querystring }}&pagina={{ page.next_page_number }}">Siguiente</a>{% endif %}
+        </nav>{% endif %}
+      {% else %}
+        <div class="panel empty">{% include "includes/icon.html" with name="search" size=48 %}<h2>No encontramos productos</h2><p class="muted">Prueba con otra búsqueda o pídenos una cotización.</p><a class="btn btn-primary" href="{% url 'quotes:request' %}">Cotizar</a></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

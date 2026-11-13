@@ -17,8 +17,8 @@
   Datos Personales (ANPD) antes del lanzamiento.
 - Política de privacidad publicada y versionada; cada consentimiento guarda la versión.
 - Derechos ARCO: formulario dedicado; respuesta dentro de los plazos de ley.
-- Encargados del tratamiento: Culqi (pagos), Google Cloud (servidor),
-  Supabase (BD), Cloudflare (CDN/archivos), Resend (correo), AltoFact
+- Encargados del tratamiento: Culqi (pagos),
+  DigitalOcean (servidor y BD), Cloudflare (CDN/archivos), Resend (correo), AltoFact
   (comprobantes). Revisar sus términos de protección de datos.
 - Transferencia internacional: los servidores pueden estar fuera del Perú;
   debe informarse en la política de privacidad.

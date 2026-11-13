@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container section"><div class="panel empty">
+  <h1>Este enlace de pago ya no está vigente</h1>
+  <p class="muted">Los enlaces duran 72 horas para mantener precio y stock. Escríbenos y te generamos uno nuevo.</p>
+  <a class="btn btn-primary" href="{% url 'quotes:request' %}">Contactar a AltoTec</a>
+</div></div>
+{% endblock %}

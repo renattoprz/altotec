@@ -1,4 +1,4 @@
-# Imagen de producción para Google Cloud Run.
+# Imagen de producción (DigitalOcean App Platform o Droplet con Docker).
 FROM python:3.13-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -18,4 +18,5 @@ RUN useradd --system --uid 10001 --no-create-home app && chown -R app /app
 USER 10001
 
 EXPOSE 8080
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "4", "--timeout", "30", "--forwarded-allow-ips", "*"]

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Libro de Reclamaciones · AltoTec{% endblock %}
+{% block content %}
+<div class="container section">
+  <form method="post" class="panel stack" novalidate>{% csrf_token %}
+    <h1>{% include "includes/icon.html" with name="book" size=32 %} Libro de Reclamaciones</h1>
+    <p class="muted small">Conforme al Código de Protección y Defensa del Consumidor. Proveedor: CODALTO, RUC 10704984885, nombre comercial AltoTec. Responderemos en un plazo máximo de 15 días hábiles.</p>
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+    <h2>1. Identificación del consumidor</h2>
+    <div class="form-grid">
+      {% include "includes/field.html" with field=form.full_name full=True %}
+      {% include "includes/field.html" with field=form.doc_type %}
+      {% include "includes/field.html" with field=form.doc_number %}
+      {% include "includes/field.html" with field=form.consumer_address full=True %}
+      {% include "includes/field.html" with field=form.email %}
+      {% include "includes/field.html" with field=form.phone %}
+      {% include "includes/field.html" with field=form.guardian_name full=True %}
+    </div>
+    <h2>2. Identificación del bien contratado</h2>
+    <div class="form-grid">
+      {% include "includes/field.html" with field=form.product_or_service %}
+      {% include "includes/field.html" with field=form.order_code %}
+      {% include "includes/field.html" with field=form.amount_pen %}
+    </div>
+    <h2>3. Detalle de la reclamación</h2>
+    {% include "includes/field.html" with field=form.kind %}
+    {% include "includes/field.html" with field=form.detail %}
+    {% include "includes/field.html" with field=form.request %}
+    {% include "includes/field.html" with field=form.accept %}
+    {% include "includes/turnstile.html" %}
+    <button class="btn btn-primary" type="submit">Registrar</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}{% include "includes/turnstile_script.html" %}{% endblock %}

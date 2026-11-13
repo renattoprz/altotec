@@ -1,0 +1,11 @@
+{% load money %}
+Nuevo pedido pagado: {{ order.code }}
+Total: S/ {{ order.total_pen|soles }}
+Cliente: {{ order.customer.full_name }} ({{ order.customer.get_doc_type_display }} {{ order.customer.doc_number }})
+Comprobante: {{ order.get_receipt_type_display }}{% if order.receipt_error %} - PENDIENTE: {{ order.receipt_error }}{% endif %}
+
+Pedir al proveedor:
+{% for item in items %}- {{ item.quantity }} x {{ item.product.sku }} {{ item.product.name }}
+{% endfor %}{% if order.quote_id %}- Ver cotización #{{ order.quote_id }} en el panel
+{% endif %}
+Entrega: {{ order.get_delivery_display }} - {{ order.address }} {{ order.district }} ({{ order.shipping_zone.name }})

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Pedido {{ order.code }} · AltoTec{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<div class="container section">
+  {% if just_paid %}<div class="alert alert-success" role="status"><strong>¡Pago recibido!</strong> Te enviamos la confirmación a tu correo. Guarda este enlace para seguir tu pedido.</div>{% endif %}
+  <h1>Pedido {{ order.code }}</h1>
+  <p class="muted">Estado actual: <strong>{{ order.get_status_display }}</strong></p>
+  {% if order.status == "pending_payment" %}<a class="btn btn-primary" href="{% url 'store:pay' order.tracking_token %}">Completar pago</a>{% endif %}
+  <ol class="steps">{% for label, done in steps %}<li class="{% if done %}done{% endif %}">{{ label }}</li>{% endfor %}</ol>
+  <div class="two-col">
+    <div class="panel">
+      <h2>Detalle</h2>
+      {% for item in items %}<div class="summary-row"><span>{{ item.quantity }} × {{ item.product.name }}</span><span>S/ {{ item.line_total|soles }}</span></div>{% endfor %}
+      {% if order.quote_id %}<div class="summary-row"><span>Cotización #{{ order.quote_id }}</span><span>S/ {{ order.subtotal_pen|soles }}</span></div>{% endif %}
+      <div class="summary-row"><span>Envío</span><span>S/ {{ order.shipping_pen|soles }}</span></div>
+      <div class="summary-row summary-total"><span>Total</span><span>S/ {{ order.total_pen|soles }}</span></div>
+    </div>
+    <aside class="panel">
+      <h2>Entrega</h2>
+      <p>{{ order.get_delivery_display }}<br>{{ order.address }}{% if order.district %}, {{ order.district }}{% endif %}<br>{{ place }}</p>
+      {% if order.courier or order.tracking_number %}<p><strong>Courier:</strong> {{ order.courier }}<br><strong>N.° de guía:</strong> {{ order.tracking_number }}</p>{% endif %}
+      {% if order.receipt_number %}<p><strong>{{ order.get_receipt_type_display }}:</strong> {{ order.receipt_number }}</p>{% endif %}
+      <p class="small muted">¿Algún problema? Escríbenos por WhatsApp o usa el <a href="{% url 'complaints:form' %}">Libro de Reclamaciones</a>.</p>
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+Nueva cotización #{{ quote.pk }}
+Negocio: {{ quote.business_type }} - {{ quote.registers }} caja(s)
+Entrega: {{ quote.delivery_note }}
+Cliente: {{ quote.customer.full_name }} - {{ quote.customer.phone }}
+
+{{ quote.detail }}
+
+Respóndela desde el panel: define el monto y usa la acción "Generar enlace de pago".

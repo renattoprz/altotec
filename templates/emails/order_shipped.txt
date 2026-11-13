@@ -1,0 +1,9 @@
+Hola {{ order.customer.full_name }},
+
+Tu pedido {{ order.code }} ya está en camino.
+Courier: {{ order.courier }}
+N.° de guía: {{ order.tracking_number }}
+
+Sigue tu pedido aquí: {{ tracking_url }}
+
+AltoTec

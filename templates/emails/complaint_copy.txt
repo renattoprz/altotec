@@ -1,0 +1,16 @@
+LIBRO DE RECLAMACIONES - {{ complaint }}
+Proveedor: CODALTO, RUC 10704984885 (AltoTec)
+Fecha: {{ complaint.created_at|date:"d/m/Y H:i" }}
+
+Consumidor: {{ complaint.customer.full_name }} - {{ complaint.customer.get_doc_type_display }} {{ complaint.customer.doc_number }}
+Domicilio: {{ complaint.consumer_address }}
+{% if complaint.guardian_name %}Padre/madre/apoderado: {{ complaint.guardian_name }}
+{% endif %}
+Bien contratado: {{ complaint.product_or_service }}{% if complaint.order_code %} (pedido {{ complaint.order_code }}){% endif %}
+Monto reclamado: {% if complaint.amount_pen %}S/ {{ complaint.amount_pen }}{% else %}-{% endif %}
+Tipo: {{ complaint.get_kind_display }}
+
+Detalle: {{ complaint.detail }}
+Pedido: {{ complaint.request }}
+
+Responderemos a más tardar el {{ complaint.due_date|date:"d/m/Y" }}.

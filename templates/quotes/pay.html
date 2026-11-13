@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% load money %}
+{% block title %}Pagar cotización #{{ quote.pk }} · AltoTec{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<div class="container section">
+  <h1>Cotización #{{ quote.pk }}</h1>
+  <div class="two-col">
+    <form method="post" class="panel stack" novalidate>{% csrf_token %}
+      <h2>Datos de entrega</h2>
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.receipt_type full=True %}
+        {% include "includes/field.html" with field=form.delivery full=True %}
+        {% include "includes/field.html" with field=form.department %}
+        {% include "includes/field.html" with field=form.lima_province %}
+        {% include "includes/field.html" with field=form.district %}
+        {% include "includes/field.html" with field=form.reference %}
+        {% include "includes/field.html" with field=form.address full=True %}
+      </div>
+      {% include "includes/field.html" with field=form.accept_terms %}
+      <button class="btn btn-primary btn-block" type="submit">Continuar al pago</button>
+    </form>
+    <aside class="panel summary">
+      <h2>Resumen</h2>
+      <p>{{ quote.business_type }} · {{ quote.registers }} caja{{ quote.registers|pluralize }}</p>
+      <p class="muted small">{{ quote.detail|linebreaksbr }}</p>
+      <div class="summary-row summary-total"><span>Total (incluye envío)</span><span>S/ {{ quote.proposed_total_pen|soles }}</span></div>
+      <p class="small muted">Enlace válido hasta {{ quote.payment_link_expires_at|date:"d/m/Y H:i" }}.</p>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/checkout.js' %}" defer></script>{% endblock %}
