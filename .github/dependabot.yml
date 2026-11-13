@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Nos quedamos en Django 5.2 LTS (soporte de seguridad hasta abril de 2028).
+      # Los parches de seguridad 5.2.x sí llegan; el salto a la siguiente LTS se planifica aparte.
+      - dependency-name: django
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+    groups:
+      herramientas-dev:
+        patterns: ["pytest*", "ruff", "bandit", "pip-audit"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -13,3 +21,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # Python 3.13 hasta validar todas las dependencias en una versión nueva.
+      - dependency-name: python
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
