@@ -29,3 +29,8 @@ def test_security_headers(client):
 @pytest.mark.parametrize("path", ["/favicon.ico", "/apple-touch-icon.png", "/site.webmanifest"])
 def test_root_icons_are_served(client, path):
     assert client.get(path).status_code == 200
+
+
+def test_manifest_content_type(client):
+    response = client.get("/site.webmanifest")
+    assert response["Content-Type"].startswith("application/manifest+json")

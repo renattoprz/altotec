@@ -183,6 +183,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 # Archivos servidos en la raíz del sitio (favicon.ico, apple-touch-icon, manifiesto).
 WHITENOISE_ROOT = BASE_DIR / "static" / "root"
+WHITENOISE_MIMETYPES = {".webmanifest": "application/manifest+json"}
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
